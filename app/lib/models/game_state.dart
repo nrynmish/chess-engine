@@ -3,7 +3,36 @@ import 'position.dart';
 import 'piece.dart';
 
 enum GameMode { offline, online, engine }
-enum GameStatus { whiteTurn, blackTurn, engineThinking, check, checkmate, stalemate }
+
+enum GameStatus {
+  whiteTurn,
+  blackTurn,
+  engineThinking,
+  check,
+  checkmate,
+  stalemate,
+}
+
+class CastlingRights {
+  bool whiteKingside;
+  bool whiteQueenside;
+  bool blackKingside;
+  bool blackQueenside;
+
+  CastlingRights({
+    this.whiteKingside = true,
+    this.whiteQueenside = true,
+    this.blackKingside = true,
+    this.blackQueenside = true,
+  });
+
+  CastlingRights copy() => CastlingRights(
+    whiteKingside: whiteKingside,
+    whiteQueenside: whiteQueenside,
+    blackKingside: blackKingside,
+    blackQueenside: blackQueenside,
+  );
+}
 
 class GameState extends ChangeNotifier {
   List<List<Piece?>> board;
@@ -15,6 +44,12 @@ class GameState extends ChangeNotifier {
   bool isEngineThinking = false;
   GameMode currentMode = GameMode.offline;
 
+  CastlingRights castlingRights = CastlingRights();
+
+  Position? enPassantTarget;
+
+  Position? pendingPromotion;
+
   GameState() : board = _createInitialBoard();
 
   static List<List<Piece?>> _createInitialBoard() {
@@ -25,14 +60,22 @@ class GameState extends ChangeNotifier {
         if (row == 0 || row == 7) {
           final color = row == 0 ? PieceColor.black : PieceColor.white;
           switch (col) {
-            case 0: return Piece(PieceType.rook, color);
-            case 1: return Piece(PieceType.knight, color);
-            case 2: return Piece(PieceType.bishop, color);
-            case 3: return Piece(PieceType.queen, color);
-            case 4: return Piece(PieceType.king, color);
-            case 5: return Piece(PieceType.bishop, color);
-            case 6: return Piece(PieceType.knight, color);
-            case 7: return Piece(PieceType.rook, color);
+            case 0:
+              return Piece(PieceType.rook, color);
+            case 1:
+              return Piece(PieceType.knight, color);
+            case 2:
+              return Piece(PieceType.bishop, color);
+            case 3:
+              return Piece(PieceType.queen, color);
+            case 4:
+              return Piece(PieceType.king, color);
+            case 5:
+              return Piece(PieceType.bishop, color);
+            case 6:
+              return Piece(PieceType.knight, color);
+            case 7:
+              return Piece(PieceType.rook, color);
           }
         }
         return null;
@@ -48,6 +91,9 @@ class GameState extends ChangeNotifier {
     evaluation = 0.0;
     validMoves = [];
     isEngineThinking = false;
+    castlingRights = CastlingRights();
+    enPassantTarget = null;
+    pendingPromotion = null;
     notifyListeners();
   }
 

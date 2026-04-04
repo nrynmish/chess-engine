@@ -41,5 +41,5 @@
 *.dwo
 
 *.swp
-
+.vscode
 digest.txt

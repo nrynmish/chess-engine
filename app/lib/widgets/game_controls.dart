@@ -26,17 +26,11 @@ class GameControls extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Evaluation Bar
-            EvaluationBar(evaluation: state.evaluation),
-            
             const SizedBox(height: 20),
-            
+
             // Evaluation Score
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
@@ -51,9 +45,9 @@ class GameControls extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             // Engine Move Button
             if (state.currentMode == GameMode.engine)
               ElevatedButton.icon(
@@ -69,10 +63,10 @@ class GameControls extends StatelessWidget {
                   ),
                 ),
               ),
-            
+
             if (state.currentMode == GameMode.engine)
               const SizedBox(height: 15),
-            
+
             // Copy FEN Button
             OutlinedButton.icon(
               onPressed: state.isEngineThinking
@@ -81,9 +75,9 @@ class GameControls extends StatelessWidget {
               icon: const Icon(Icons.copy_all),
               label: const Text('Copy FEN'),
             ),
-            
+
             const SizedBox(height: 15),
-            
+
             // Engine Status
             if (!engineAvailable && state.currentMode == GameMode.engine)
               Container(
@@ -138,7 +132,7 @@ class GameControls extends StatelessWidget {
   void _copyFenToClipboard(BuildContext context, GameState state) {
     final fen = FenConverter.boardToFen(state);
     Clipboard.setData(ClipboardData(text: fen));
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('FEN copied to clipboard: $fen'),

@@ -24,6 +24,5 @@ flutter:
   
   assets:
     - assets/pieces/
-    - assets/images/
     - assets/engines/
     - assets/icons/

@@ -8,6 +8,7 @@ import '../services/chess_engine_service.dart';
 import '../widgets/chess_board.dart';
 import '../widgets/evaluation_bar.dart';
 import '../widgets/game_controls.dart';
+import '../widgets/promotion_dialog.dart';
 
 // ─────────────────────────────────────────────
 // DEVELOPER FLAG — set to false before release
@@ -18,19 +19,26 @@ const bool kDevMode = false;
 // BOT DEFINITIONS
 // ─────────────────────────────────────────────
 
-enum BotDifficulty { beginner, casual, intermediate, advanced, master, grandmaster }
+enum BotDifficulty {
+  beginner,
+  casual,
+  intermediate,
+  advanced,
+  master,
+  grandmaster,
+}
 
 class BotProfile {
   final String id;
   final String name;
-  final String title;       // short tag, e.g. "Beginner", "GM"
+  final String title; // short tag, e.g. "Beginner", "GM"
   final String description;
   final BotDifficulty difficulty;
   final IconData icon;
   final Color accentColor;
   final int eloRating;
-  final int engineDepth;    // Stockfish search depth
-  final double errorRate;   // 0-1, chance of suboptimal move
+  final int engineDepth; // Stockfish search depth
+  final double errorRate; // 0-1, chance of suboptimal move
 
   const BotProfile({
     required this.id,
@@ -160,7 +168,10 @@ class _BotSelectionSheetState extends State<BotSelectionSheet> {
                 // Selected ELO badge
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: _selected.accentColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(12),
@@ -217,7 +228,10 @@ class _BotSelectionSheetState extends State<BotSelectionSheet> {
           // Confirm button
           Padding(
             padding: EdgeInsets.fromLTRB(
-              24, 12, 24, 24 + MediaQuery.of(context).padding.bottom,
+              24,
+              12,
+              24,
+              24 + MediaQuery.of(context).padding.bottom,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -305,13 +319,17 @@ class _BotCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? bot.accentColor.withOpacity(0.2)
-                        : (isDark ? Colors.white24 : Colors.black.withOpacity(0.05)),
+                        : (isDark
+                              ? Colors.white24
+                              : Colors.black.withOpacity(0.05)),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Icon(
                     bot.icon,
                     size: 26,
-                    color: isSelected ? bot.accentColor : (isDark ? Colors.white54 : Colors.black38),
+                    color: isSelected
+                        ? bot.accentColor
+                        : (isDark ? Colors.white54 : Colors.black38),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -333,7 +351,10 @@ class _BotCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 7,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: bot.accentColor.withOpacity(0.15),
                               borderRadius: BorderRadius.circular(5),
@@ -376,7 +397,9 @@ class _BotCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        color: isSelected ? bot.accentColor : (isDark ? Colors.white38 : Colors.black38),
+                        color: isSelected
+                            ? bot.accentColor
+                            : (isDark ? Colors.white38 : Colors.black38),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -402,7 +425,11 @@ class _BotCard extends StatelessWidget {
                 // Selected check
                 if (isSelected) ...[
                   const SizedBox(width: 10),
-                  Icon(Icons.check_circle_rounded, color: bot.accentColor, size: 20),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: bot.accentColor,
+                    size: 20,
+                  ),
                 ],
               ],
             ),
@@ -441,7 +468,11 @@ class _DevPanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.terminal_rounded, size: 14, color: Color(0xFF6366F1)),
+              const Icon(
+                Icons.terminal_rounded,
+                size: 14,
+                color: Color(0xFF6366F1),
+              ),
               const SizedBox(width: 6),
               Text(
                 'DEV PANEL',
@@ -476,7 +507,10 @@ class _DevPanel extends StatelessWidget {
           _devRow('Engine Depth', '${bot.engineDepth}'),
           _devRow('Error Rate', '${(bot.errorRate * 100).toStringAsFixed(0)}%'),
           _devRow('Bot ELO', '${bot.eloRating}'),
-          _devRow('Turn', state.currentTurn == PieceColor.white ? 'White' : 'Black'),
+          _devRow(
+            'Turn',
+            state.currentTurn == PieceColor.white ? 'White' : 'Black',
+          ),
           _devRow('Status', state.status.name),
           //_devRow('Half-moves', '${state.halfMoveClock}'),
           //_devRow('FEN', state.fen ?? '—', mono: true, small: true),
@@ -485,7 +519,12 @@ class _DevPanel extends StatelessWidget {
     );
   }
 
-  Widget _devRow(String key, String value, {bool mono = false, bool small = false}) {
+  Widget _devRow(
+    String key,
+    String value, {
+    bool mono = false,
+    bool small = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -540,10 +579,10 @@ class _BotHeader extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? Colors.white12 : Colors.black12,
-        ),
-        color: isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.02),
+        border: Border.all(color: isDark ? Colors.white12 : Colors.black12),
+        color: isDark
+            ? Colors.white.withOpacity(0.03)
+            : Colors.black.withOpacity(0.02),
       ),
       child: Row(
         children: [
@@ -596,7 +635,10 @@ class _BotHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: bot.accentColor.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(4),
@@ -621,8 +663,12 @@ class _BotHeader extends StatelessWidget {
                     key: ValueKey(isThinking),
                     style: TextStyle(
                       fontSize: 12,
-                      color: isThinking ? Colors.green : (isDark ? Colors.white54 : Colors.black45),
-                      fontWeight: isThinking ? FontWeight.w600 : FontWeight.normal,
+                      color: isThinking
+                          ? Colors.green
+                          : (isDark ? Colors.white54 : Colors.black45),
+                      fontWeight: isThinking
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                     ),
                   ),
                 ),
@@ -660,7 +706,9 @@ class _PlayerHeader extends StatelessWidget {
           width: isYourTurn ? 1.5 : 1,
         ),
         color: isYourTurn
-            ? (isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03))
+            ? (isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.black.withOpacity(0.03))
             : Colors.transparent,
       ),
       child: Row(
@@ -886,7 +934,8 @@ class _GameScreenState extends State<GameScreen> {
   double _boardSize(BuildContext context) {
     final size = MediaQuery.of(context).size;
     if (_isDesktop(context)) return (size.width * 0.55).clamp(400.0, 680.0);
-    if (_isTabletOrDesktop(context)) return (size.width * 0.6).clamp(360.0, 560.0);
+    if (_isTabletOrDesktop(context))
+      return (size.width * 0.6).clamp(360.0, 560.0);
     // Mobile: square board fills width with some padding
     final boardPad = size.width - 32;
     return boardPad.clamp(0.0, 480.0);
@@ -1025,7 +1074,17 @@ class _GameScreenState extends State<GameScreen> {
                 child: SizedBox(
                   width: boardSz,
                   height: boardSz,
-                  child: ChessBoard(gameService: _gameService),
+                  child: Stack(
+                    children: [
+                      ChessBoard(gameService: _gameService),
+                      Consumer<GameState>(
+                        builder: (context, state, _) => PromotionDialog(
+                          state: state,
+                          gameService: _gameService,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1054,24 +1113,31 @@ class _GameScreenState extends State<GameScreen> {
           _StatusBanner(status: state.status, currentTurn: state.currentTurn),
 
           // Bot header (compact on mobile)
-          _BotHeader(
-            bot: _currentBot,
-            isThinking: state.isEngineThinking,
-          ),
+          _BotHeader(bot: _currentBot, isThinking: state.isEngineThinking),
 
           const SizedBox(height: 12),
 
           // Board
           AspectRatio(
             aspectRatio: 1,
-            child: ChessBoard(gameService: _gameService),
+            child: Stack(
+              children: [
+                ChessBoard(gameService: _gameService),
+                Consumer<GameState>(
+                  builder: (context, state, _) =>
+                      PromotionDialog(state: state, gameService: _gameService),
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 12),
 
           // Player header
           _PlayerHeader(
-            isYourTurn: state.currentTurn == PieceColor.white && !state.isEngineThinking,
+            isYourTurn:
+                state.currentTurn == PieceColor.white &&
+                !state.isEngineThinking,
           ),
 
           const SizedBox(height: 12),
@@ -1114,16 +1180,22 @@ class _GameScreenState extends State<GameScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Bot header
-        _BotHeader(
-          bot: _currentBot,
-          isThinking: state.isEngineThinking,
-        ),
+        _BotHeader(bot: _currentBot, isThinking: state.isEngineThinking),
 
         const SizedBox(height: 8),
 
         // Status banner
         _StatusBanner(status: state.status, currentTurn: state.currentTurn),
+        if (_isEngineInitialized)
+          SizedBox(
+            height: 200, // vertical bar needs height
+            child: EvaluationBar(
+              evaluation: state.evaluation,
+              isHorizontal: false,
+            ),
+          ),
 
+        const SizedBox(height: 12),
         const SizedBox(height: 8),
 
         const SizedBox(height: 8),
@@ -1139,7 +1211,8 @@ class _GameScreenState extends State<GameScreen> {
 
         // Player header
         _PlayerHeader(
-          isYourTurn: state.currentTurn == PieceColor.white && !state.isEngineThinking,
+          isYourTurn:
+              state.currentTurn == PieceColor.white && !state.isEngineThinking,
         ),
 
         // Dev panel
